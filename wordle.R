@@ -157,6 +157,9 @@ t = Sys.time()
 get_avg_words_remaining(updated_list, "clone") # fast!
 Sys.time()-t
 
+
+### this should actually have two parameters: 
+### guessable words and remaining words
 find_best_words = function(word_list){
   words = word_list$word
   word_list$score <- NA
@@ -172,8 +175,8 @@ find_best_words = function(word_list){
 
 find_best_words(updated_list)
 
-updated_list <- narrow_word_list(word_list, "lares", "yxxxy")
-updated_list <- narrow_word_list(updated_list, "spoil", "ggxyg")
+updated_list <- narrow_word_list(word_list, "lares", "xyxxx")
+updated_list <- narrow_word_list(updated_list, "conia", "gxyxy")
 
 
 
