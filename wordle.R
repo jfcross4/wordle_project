@@ -1,6 +1,7 @@
 library(stringr)
 library(dplyr)
 library(ggplot2)
+library(data.table) # for fread and fwrite functions
 
 to_word = function(word){paste(word, collapse = "")}
 
@@ -175,9 +176,10 @@ find_best_words = function(word_list){
 
 find_best_words(updated_list)
 
-updated_list <- narrow_word_list(word_list, "lares", "xyxxx")
-updated_list <- narrow_word_list(updated_list, "conia", "gxyxy")
-
+updated_list <- narrow_word_list(word_list, "lares", "xxxyx")
+updated_list <- narrow_word_list(updated_list, "monie", "xyxxg")
+updated_list <- narrow_word_list(updated_list, "epode", "xxgxg")
+updated_list <- narrow_word_list(updated_list, "evoke", "xxggg")
 
 
 updated_list <- narrow_word_list(updated_list, "globe", "xggyg")
@@ -208,3 +210,72 @@ ggplot(word_scores_plus, aes(score.x, score.y)) +
   geom_point(size=0.5, alpha=0.3, color="blue") + geom_smooth(color="red") + xlab("mean bits of information") + 
   ylab("mean words remaning")+
   ggtitle("Mean words remaining v. Mean bits of information")
+
+answers_list = read.csv("wordle-answers-alphabetical.txt", 
+                        col.names=c("answer"))
+
+# create evaluation data
+combo_list = expand.grid(word_list$word, answers_list$answer)
+colnames(combo_list) = c("possible_guess", "possible_answer")
+
+combo_list$scoring <- NA
+
+
+t  = Sys.time()
+
+possible_answers = combo_list$possible_answer
+possible_guesses = combo_list$possible_guess
+scores = combo_list$scoring
+
+t  = Sys.time()
+for (i in 1:5000){
+  scores[i] = 
+    to_word(evaluate_guess(actual=possible_answers[i], 
+                           guess = possible_guesses[i]))
+  if(i %% 1000 == 0){print(i)}
+  }
+Sys.time() - t    
+
+
+for (i in 1:length(scores)){
+  scores[i] = 
+    to_word(evaluate_guess(actual=possible_answers[i], 
+                           guess = possible_guesses[i]))
+  if(i %% 10000 == 0){print(i)}
+  }
+
+combo_list$scoring = scores
+#fwrite(combo_list, file="combo_list.csv", row.names=FALSE)
+  #Time difference of 0.1900241 secs
+
+test_combo_list = fread("combo_list.csv")
+
+
+t = Sys.time()
+nums = combo_list %>% 
+  filter(possible_guess == "lares") %>% 
+  dplyr::select(scoring) %>% table()
+
+
+H = -1*sum(nums/sum(nums)*log(nums/sum(nums), base=2))
+H
+Sys.time()-t
+
+possible_answer_results = combo_list %>% 
+  filter(possible_guess == "lares" & scoring=="xxxxx")
+
+possible_answer_results = unique(possible_answer_results$possible_answer)
+
+updated_combo_list = combo_list %>% 
+  filter(possible_answer %in% possible_answer_results)
+
+log(length(possible_answer_results), base=2)
+
+
+
+nums = updated_combo_list %>% 
+  filter(possible_guess == "lares") %>%
+  dplyr::select(scoring) %>% table()
+
+H = -1*sum(nums/sum(nums)*log(nums/sum(nums), base=2))
+H #guessing lares again has 0 value
