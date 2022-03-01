@@ -39,7 +39,9 @@ evaluate_guess <- function(actual, guess){
 }
 
 
-word_list <- read.delim("words.txt", header=FALSE, col.names=c("word"))
+word_list <- read.delim("words.txt", 
+                        header=FALSE, 
+                        col.names=c("word"))
 
 #words <- t(apply(word_list, 1, to_vector))
 
@@ -214,41 +216,17 @@ ggplot(word_scores_plus, aes(score.x, score.y)) +
 answers_list = read.csv("wordle-answers-alphabetical.txt", 
                         col.names=c("answer"))
 
-# create evaluation data
-combo_list = expand.grid(word_list$word, answers_list$answer)
-colnames(combo_list) = c("possible_guess", "possible_answer")
 
-combo_list$scoring <- NA
-
-
-t  = Sys.time()
-
-possible_answers = combo_list$possible_answer
-possible_guesses = combo_list$possible_guess
-scores = combo_list$scoring
-
-t  = Sys.time()
-for (i in 1:5000){
-  scores[i] = 
-    to_word(evaluate_guess(actual=possible_answers[i], 
-                           guess = possible_guesses[i]))
-  if(i %% 1000 == 0){print(i)}
-  }
-Sys.time() - t    
-
-
-for (i in 1:length(scores)){
-  scores[i] = 
-    to_word(evaluate_guess(actual=possible_answers[i], 
-                           guess = possible_guesses[i]))
-  if(i %% 10000 == 0){print(i)}
-  }
-
-combo_list$scoring = scores
+# Takes 2-3 hours to score full list of 5-letter
+# words agains the 2300 possible answers
+# source("score_guess_answer_combos.R")
+# combo_list = 
+#   score_guess_answer_combos(word_list, answers_list)
 #fwrite(combo_list, file="combo_list.csv", row.names=FALSE)
+
   #Time difference of 0.1900241 secs
 
-test_combo_list = fread("combo_list.csv")
+combo_list = fread("combo_list.csv")
 
 
 t = Sys.time()
