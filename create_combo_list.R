@@ -1,4 +1,4 @@
-score_guess_answer_combos <- function(word_list, answers_list){
+create_combo_list <- function(word_list, answers_list){
   # create evaluation data
   combo_list = 
     expand.grid(word_list$word, answers_list$answer)
