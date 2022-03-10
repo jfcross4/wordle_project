@@ -31,3 +31,11 @@ evaluate_guess <- function(actual, guess){
   result[yellow] = "y"
   return(result)
 }
+
+guesses_remaining = function(x){
+  (2/9)*x + 1
+}
+
+scores = function(guesses_remaining, num_words_remaining){
+  if(in_list)(1 - 1/num_words_remaining)*guesses_remaining
+  else guesses_remaining}

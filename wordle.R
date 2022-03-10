@@ -25,18 +25,22 @@ answers_list = read.csv("wordle-answers-alphabetical.txt",
 combo_list = fread("combo_list.csv")
 
 t = Sys.time()
-find_best_words(combo_list = combo_list, answers_list)
+word_scores = find_mean_bits_remaining(combo_list = combo_list, answers_list)
 Sys.time()-t #31 seconds! finds roate as best word
 
+t = Sys.time()
 updated_list <- narrow_word_list(word_list=answers_list, 
-                                 guess="roate", result="ygxxx",
+                                 guess="soare", result="yxyxg",
                                  combo_list = combo_list)
 
-find_best_words(combo_list = combo_list, updated_list)
+find_mean_bits_remaining(combo_list = combo_list, updated_list)
 
 updated_list <- narrow_word_list(word_list=updated_list, 
-                                 guess="cundy", result="xyyxx",
+                                 guess="aisle", result="yxyyg",
                                  combo_list = combo_list)
-
+Sys.time()-t
 # only mourn remaining
 
+updated_list <- narrow_word_list(word_list=updated_list, 
+                                 guess="essay", result="yxxgx",
+                                 combo_list = combo_list)
