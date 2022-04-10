@@ -6,6 +6,7 @@ library(data.table) # for fread and fwrite functions
 source("utils.R")
 source("find_best_words.R")
 source("narrow_word_list.R")
+source("play_game.R")
 
 word_list <- read.delim("words.txt", 
                         header=FALSE, 
@@ -30,17 +31,17 @@ Sys.time()-t #31 seconds! finds roate as best word
 
 t = Sys.time()
 updated_list <- narrow_word_list(word_list=answers_list, 
-                                 guess="soare", result="yxyxg",
+                                 guess="stare", result="xxxxx",
                                  combo_list = combo_list)
 
-find_mean_bits_remaining(combo_list = combo_list, updated_list)
-
+best_word =  find_mean_bits_remaining(combo_list = combo_list, updated_list)
+guess_word = best_word$possible_guess[1]
 updated_list <- narrow_word_list(word_list=updated_list, 
-                                 guess="aisle", result="yxyyg",
+                                 guess="funky", result="xxyxy",
                                  combo_list = combo_list)
 Sys.time()-t
 # only mourn remaining
 
 updated_list <- narrow_word_list(word_list=updated_list, 
-                                 guess="essay", result="yxxgx",
+                                 guess="eater", result="xgggg",
                                  combo_list = combo_list)
